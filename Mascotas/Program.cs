@@ -1,6 +1,7 @@
 using Mascotas.Middleware;
 using Mascotas.Models;
 using Mascotas.Repositories;
+using Mascotas.Servicios;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ string connectionString = builder.Configuration.GetConnectionString("mascotas_db
 builder.Services.AddDbContext<GatosContexto>(opcion=> opcion.UseSqlServer(connectionString));
 builder.Services.AddScoped<DbContext, GatosContexto>();
 builder.Services.AddTransient<GatoRepository>();
+builder.Services.AddTransient<GatoService>();
 
 var app = builder.Build();
 

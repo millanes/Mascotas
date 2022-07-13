@@ -1,5 +1,8 @@
 ﻿using Mascotas.Models;
+using Mascotas.Presentacion.ViewModels;
 using Mascotas.Repositories;
+using Mascotas.Servicios;
+using Mascotas.Servicios.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -10,18 +13,35 @@ namespace Mascotas.Controllers
     [ApiController]
     public class GatosController : ControllerBase
     {
-        private readonly GatoRepository gatoRepository;
+        private readonly GatoService gatoService;
+
 
         //public GatosController(GatoRepository gatoRepository)
         //{
         //    this.gatoRepository = gatoRepository;
         //}
-        public GatosController(GatoRepository gatoRepository) => this.gatoRepository = gatoRepository;
+        public GatosController(GatoService gatoService)
+        {
+            this.gatoService = gatoService;
+        }
         // GET: api/<GatosController>
         [HttpGet]
-        public ActionResult<IEnumerable<Gato>> Obtener()
+        public ActionResult<IEnumerable<GatoViewModel>> Obtener()
         {
-            return Ok(this.gatoRepository.FindAll());
+            IEnumerable<GatoDto> gatos = this.gatoService.ObtenerTodoLosGatos();
+            List<GatoViewModel> gatosViewModel = new List<GatoViewModel>();
+            //proceso a realizar con un mapper
+            foreach (var gato in gatos)
+            {
+                gatosViewModel.Add(new GatoViewModel
+                {
+                    IdGato = gato.IdGato,
+                    Nombre = gato.Nombre,
+                    Edad = DateTime.Now.Year - gato.Nacimiento.Value.Year
+                });
+            }
+
+            return Ok(gatosViewModel);
         }
 
         //// GET api/<GatosController>/Luna
@@ -38,10 +58,18 @@ namespace Mascotas.Controllers
 
         // POST api/<GatosController>
         [HttpPost]
-        public ActionResult Adoptar([FromBody] Gato unGato)
+        public ActionResult<GatoViewModel> Adoptar([FromBody] Gato unGato)
         {
-            this.gatoRepository.Add(unGato);
-            return Ok("Has adoptado al gato!");
+            //this.gatoRepository.Add(unGato);
+            GatoDto gato = this.gatoService.AdoptarA(unGato);
+            //proceso a realizar con un mapper
+            GatoViewModel gatoViewModel = new GatoViewModel
+            {
+                IdGato = gato.IdGato,
+                Nombre = gato.Nombre,
+                Edad = DateTime.Now.Year - gato.Nacimiento.Value.Year
+            };
+            return Ok(gatoViewModel);
         }
 
         //// PUT api/<GatosController>/Luna

@@ -16,6 +16,11 @@ namespace Mascotas.Repositories
             return this.context.Gatos.ToList();
         }
 
+        public Gato FindByName(string nombre)
+        {
+            return this.context.Gatos.Where(x => x.Nombre == nombre).First();
+        }
+
         public void Add(Gato gato)
         {
             this.context.Gatos.Add(gato);
