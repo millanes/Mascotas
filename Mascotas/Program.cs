@@ -2,6 +2,7 @@ using Mascotas.Middleware;
 using Mascotas.Models;
 using Mascotas.Repositories;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +13,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //builder.Services.AddSingleton<Gato>();
-builder.Services.AddSingleton<GatoRepository>();
+string connectionString = builder.Configuration.GetConnectionString("mascotas_db");
+
+builder.Services.AddDbContext<GatosContexto>(opcion=> opcion.UseSqlServer(connectionString));
+builder.Services.AddScoped<DbContext, GatosContexto>();
+builder.Services.AddTransient<GatoRepository>();
 
 var app = builder.Build();
 

@@ -4,24 +4,22 @@ namespace Mascotas.Repositories
 {
     public class GatoRepository
     {
-        List<Gato> listaGatos;
+        private readonly GatosContexto context;
 
-        public GatoRepository()
+        public GatoRepository(GatosContexto context)
         {
-            listaGatos = new List<Gato> {
-                new Gato { Nombre = "Luna", Edad = 14, Color = "Blanca" },
-                new Gato { Nombre = "Milo", Edad = 14, Color = "Negro" }
-            };
+            this.context = context;
         }
 
         public IEnumerable<Gato> FindAll()
         {
-            return listaGatos;
+            return this.context.Gatos.ToList();
         }
 
         public void Add(Gato gato)
         {
-            this.listaGatos.Add(gato);
+            this.context.Gatos.Add(gato);
+            this.context.SaveChanges();
         }
     }
 }

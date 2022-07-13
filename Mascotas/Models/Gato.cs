@@ -1,9 +1,14 @@
-﻿namespace Mascotas.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace Mascotas.Models
 {
-    public class Gato
+    public partial class Gato
     {
-        public string? Nombre { get; set; } = "Lara";
-        public int Edad { get; set; } = 10;
-        public string? Color { get; set; } = "Gris";
+        public int IdGato { get; set; }
+        public string Nombre { get; set; } = null!;
+        public string Raza { get; set; } = null!;
+        public string? Sexo { get; set; }
+        public DateTime? Nacimiento { get; set; }
     }
 }
