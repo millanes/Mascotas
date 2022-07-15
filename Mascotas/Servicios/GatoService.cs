@@ -45,13 +45,40 @@ namespace Mascotas.Servicios
             return gatoDto;
         }
 
-        public GatoDto ActualizarInfomacionDe(string nombre, Gato unGato)
+        public GatoDto ActualizarInfomacionDe(string nombre, string nuevoNombre)
         {
-            if (string.IsNullOrEmpty(unGato.Nombre))
+            if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(nuevoNombre))
                 return new GatoDto();
 
-            this.gatoRepository.Update(unGato);
             var gato = gatoRepository.FindByName(nombre);
+
+            gato.Nombre = nuevoNombre;
+
+            this.gatoRepository.Update(gato);
+
+            gato = gatoRepository.FindByName(nuevoNombre);
+
+            if (gato == null) 
+                return new GatoDto();
+
+            var gatoDto = new GatoDto
+            {
+                IdGato = gato.IdGato,
+                Nombre = gato.Nombre,
+                Nacimiento = gato.Nacimiento
+            };
+            
+            return gatoDto;
+        }
+
+        public GatoDto DarEnAdopcionA(string nombre)
+        {
+            var gato = gatoRepository.FindByName(nombre);
+
+            if (gato == null)
+                return new GatoDto();
+
+            this.gatoRepository.Delete(gato);
             var gatoDto = new GatoDto
             {
                 IdGato = gato.IdGato,
@@ -61,16 +88,12 @@ namespace Mascotas.Servicios
             return gatoDto;
         }
 
-        public GatoDto DarEnAdopcionA(string nombre)
+        public IEnumerable<GatoDto> BuscarPorRaza(string raza)
         {
-            this.gatoRepository.Delete(unGato);
-            var gatoDto = new GatoDto
-            {
-                IdGato = unGato.IdGato,
-                Nombre = unGato.Nombre,
-                Nacimiento = unGato.Nacimiento
-            };
-            return gatoDto;
+            var gatos = gatoRepository.Buscar(raza);
+            var gatosDto = gatos.Select(x => new GatoDto
+                { IdGato = x.IdGato, Nombre = x.Nombre, Nacimiento = x.Nacimiento });
+            return gatosDto;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Mascotas.Models;
+using Mascotas.Servicios.DTO;
 
 namespace Mascotas.Repositories
 {
@@ -42,6 +43,12 @@ namespace Mascotas.Repositories
             var gatoAEliminar = this.context.Gatos.First(x => x.IdGato == gato.IdGato);
             this.context.Gatos.Remove(gatoAEliminar);
             this.context.SaveChanges();
+        }
+
+        public IEnumerable<Gato> Buscar(string raza)
+        {
+            var gatos = context.Gatos.Where(x => x.Raza == raza);
+            return gatos.ToList();
         }
     }
 }

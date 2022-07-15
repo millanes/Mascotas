@@ -60,7 +60,6 @@ namespace Mascotas.Controllers
         [HttpPost]
         public ActionResult<GatoViewModel> Adoptar([FromBody] Gato unGato)
         {
-            //this.gatoRepository.Add(unGato);
             GatoDto gato = this.gatoService.AdoptarA(unGato);
             //proceso a realizar con un mapper
             GatoViewModel gatoViewModel = new GatoViewModel
@@ -73,37 +72,40 @@ namespace Mascotas.Controllers
         }
 
         //// PUT api/<GatosController>/Luna
-        //[HttpPut("{nombre}")]
-        //public ActionResult<IEnumerable<Gato>> Renombrar(string nombre, [FromBody] string nuevoNombre)
-        //{
-        //    var gato = listaGatos.Find(gato => gato.Nombre == nombre);
-        //    if (gato != null)
-        //    {
-        //        gato.Nombre = nuevoNombre;
-        //        return Ok(listaGatos);
-        //    }
-        //    else
-        //    {
-        //        return BadRequest($"No tienes un gato con el nombre {nombre}");
-        //    }
-        //}
+        [HttpPut("{nombre}")]
+        public ActionResult<Gato> Renombrar(string nombre, [FromBody] string nuevoNombre)
+        {
+            var gato = gatoService.ActualizarInfomacionDe(nombre, nuevoNombre);
+
+            return Ok(gato);
+        }
 
         // DELETE api/<GatosController>/Luna
         [HttpDelete("{nombre}")]
         public ActionResult Regalar(string nombre)
         {
-            var gatoARegalar = gatoService.DarEnAdopcionA(
+            var gatoARegalar = gatoService.DarEnAdopcionA(nombre);
 
-            if (gatoARegalar != null)
+            if (!string.IsNullOrEmpty(gatoARegalar.Nombre))
             {
-                listaGatos.Remove(gatoARegalar);
-
-                return Ok($"Regalaste a uno de tus gatos. ¡Adios {nombre}!");
+                return StatusCode(200, $"Regalaste a uno de tus gatos. ¡Adios {nombre}!");
             }
             else
             {
-                return BadRequest($"No pudiste regalar a {nombre}. ¿El nombre es correcto?");
+                //204 No Content
+                return StatusCode(204, $"No pudiste regalar a {nombre}. ¿El nombre es correcto?");
             }
+        }
+
+        [HttpGet("{raza}/gatos")]
+        public ActionResult<IEnumerable<GatoDto>> Buscar(string raza)
+        {
+            var gatos = gatoService.BuscarPorRaza(raza);
+            
+            if (!gatos.Any())
+                return NoContent();
+
+            return Ok(gatos);
         }
     }
 }
