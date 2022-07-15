@@ -88,22 +88,22 @@ namespace Mascotas.Controllers
         //    }
         //}
 
-        //// DELETE api/<GatosController>/Luna
-        //[HttpDelete("{nombre}")]
-        //public ActionResult Regalar(string nombre)
-        //{
-        //    var gatoARegalar = listaGatos.Find(gato => gato.Nombre == nombre);
+        // DELETE api/<GatosController>/Luna
+        [HttpDelete("{nombre}")]
+        public ActionResult Regalar(string nombre)
+        {
+            var gatoARegalar = gatoService.DarEnAdopcionA(
 
-        //    if (gatoARegalar != null)
-        //    {
-        //        listaGatos.Remove(gatoARegalar);
+            if (gatoARegalar != null)
+            {
+                listaGatos.Remove(gatoARegalar);
 
-        //        return Ok($"Regalaste a uno de tus gatos. ¡Adios {nombre}!");
-        //    }
-        //    else
-        //    {
-        //        return BadRequest($"No pudiste regalar a {nombre}. ¿El nombre es correcto?");
-        //    }
-        //}
+                return Ok($"Regalaste a uno de tus gatos. ¡Adios {nombre}!");
+            }
+            else
+            {
+                return BadRequest($"No pudiste regalar a {nombre}. ¿El nombre es correcto?");
+            }
+        }
     }
 }

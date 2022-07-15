@@ -26,5 +26,22 @@ namespace Mascotas.Repositories
             this.context.Gatos.Add(gato);
             this.context.SaveChanges();
         }
+
+        public void Update(Gato gato)
+        {
+            var gatoAModificar = this.context.Gatos.First(x => x.IdGato == gato.IdGato);
+            gatoAModificar.Nombre = gato.Nombre;
+            gatoAModificar.Sexo = gato.Sexo;
+            gatoAModificar.Nacimiento = gato.Nacimiento;
+            gatoAModificar.Raza = gato.Raza;
+            this.context.SaveChanges();
+        }
+
+        public void Delete(Gato gato)
+        {
+            var gatoAEliminar = this.context.Gatos.First(x => x.IdGato == gato.IdGato);
+            this.context.Gatos.Remove(gatoAEliminar);
+            this.context.SaveChanges();
+        }
     }
 }
