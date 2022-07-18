@@ -26,7 +26,7 @@ namespace Mascotas.Controllers
         }
         // GET: api/<GatosController>
         [HttpGet]
-        public ActionResult<IEnumerable<GatoViewModel>> Obtener()
+        public ActionResult<IEnumerable<GatoViewModel>> Obtener([FromHeader]string token)
         {
             IEnumerable<GatoDto> gatos = this.gatoService.ObtenerTodoLosGatos();
             List<GatoViewModel> gatosViewModel = new List<GatoViewModel>();
@@ -58,7 +58,7 @@ namespace Mascotas.Controllers
 
         // POST api/<GatosController>
         [HttpPost]
-        public ActionResult<GatoViewModel> Adoptar([FromBody] Gato unGato)
+        public ActionResult<GatoViewModel> Adoptar([FromHeader] string token, [FromBody] Gato unGato)
         {
             GatoDto gato = this.gatoService.AdoptarA(unGato);
             //proceso a realizar con un mapper
@@ -73,7 +73,7 @@ namespace Mascotas.Controllers
 
         //// PUT api/<GatosController>/Luna
         [HttpPut("{nombre}")]
-        public ActionResult<Gato> Renombrar(string nombre, [FromBody] string nuevoNombre)
+        public ActionResult<Gato> Renombrar(string nombre, [FromHeader] string token, [FromBody] string nuevoNombre)
         {
             var gato = gatoService.ActualizarInfomacionDe(nombre, nuevoNombre);
 
@@ -82,7 +82,7 @@ namespace Mascotas.Controllers
 
         // DELETE api/<GatosController>/Luna
         [HttpDelete("{nombre}")]
-        public ActionResult Regalar(string nombre)
+        public ActionResult Regalar(string nombre, [FromHeader] string token)
         {
             var gatoARegalar = gatoService.DarEnAdopcionA(nombre);
 
@@ -98,7 +98,7 @@ namespace Mascotas.Controllers
         }
 
         [HttpGet("{raza}/gatos")]
-        public ActionResult<IEnumerable<GatoDto>> Buscar(string raza)
+        public ActionResult<IEnumerable<GatoDto>> Buscar(string raza, [FromHeader] string token)
         {
             var gatos = gatoService.BuscarPorRaza(raza);
             

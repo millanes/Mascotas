@@ -42,6 +42,10 @@ app.MapControllers();
 //    await next.Invoke();
 //    app.Logger.LogInformation($"Status Code: {context.Response.StatusCode}, Content-Type: {context.Response.ContentType}");
 //});
+app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
+{
+    appBuilder.UseMiddleware<AuthenticationMiddleware>();
+});
 
 app.UseMiddleware<LoggerGatosMiddleware>();
 
